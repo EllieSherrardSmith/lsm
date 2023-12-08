@@ -88,7 +88,7 @@ timeline = 1:48 ## JAN 2004 UNTIL DEC 2007
 
 plot(sites1[1:43] ~ timeline[1:43],ylab = "",
      xlab="Date",yaxt="n",xlim=c(6,43),
-     main="Site 1 Larviciding",
+     main="Musilongo: LSM",
      xaxt="n",pch="",type="l",lwd=2,col="darkgreen",ylim=c(0,1))
 axis(1,at=c(1,7,13,19,25,31,37,43),labels=c("Jan 2004","Jun 2004","Jan 2005",
                                       "Jun 2005","Jan 2006",
@@ -308,10 +308,10 @@ plotting_fun_f = function(sites1,
 ## Potential figure 1
 
 par(mfrow=c(3,2))
-par(mar=c(5,5,2,5))
+par(mar=c(3,5,2,5))
 
 plotting_fun_f(sites1 = sites1,
-               print_main_site_and_trt = "Site 1 Larviciding",
+               print_main_site_and_trt = "Musilongo: LSM",
                dat = read.csv("C:/Users/esherrar/Documents/larval_source_management/Data resource/Fillinger_Kenya highland LSM_ADULT MOSQUITO_SPRAY CATCHES_RAW DATA.csv",header=TRUE),
                site_for_lsm = 1,
                site_base_net_use = 0.073,
@@ -329,7 +329,7 @@ legend("topright",legend = c("Prevalence",
        pch=c(15,15,15,15,NA),lty=c(NA,1,2,NA,1),lwd=c(1,1,1,1,5))
 
 plotting_fun_f(sites1 = sites2,
-               print_main_site_and_trt = "Site 2 No Larviciding",
+               print_main_site_and_trt = "Kimingini: No Larviciding",
                dat = read.csv("C:/Users/esherrar/Documents/larval_source_management/Data resource/Fillinger_Kenya highland LSM_ADULT MOSQUITO_SPRAY CATCHES_RAW DATA.csv",header=TRUE),
                site_for_lsm = 2,
                site_base_net_use = 0.038,
@@ -338,7 +338,7 @@ plotting_fun_f(sites1 = sites2,
 axis(4,las=2,at=seq(0,100,20))
 
 plotting_fun_f(sites1 = sites3,
-               print_main_site_and_trt = "Site 3 Larviciding",
+               print_main_site_and_trt = "Kezege: LSM",
                dat = read.csv("C:/Users/esherrar/Documents/larval_source_management/Data resource/Fillinger_Kenya highland LSM_ADULT MOSQUITO_SPRAY CATCHES_RAW DATA.csv",header=TRUE),
                site_for_lsm = 3,
                site_base_net_use = 0.0615,
@@ -349,7 +349,7 @@ mtext(side = 2, line = 2.5,"Prevalence in 6-month to 10-years (green points, %)"
 mtext(side = 2, line = 4,"Mosquito net use (grey bars, %)")
 
 plotting_fun_f(sites1 = sites5,
-               print_main_site_and_trt = "Site 5 No Larviciding",
+               print_main_site_and_trt = "Emutete: No Larviciding",
                dat = read.csv("C:/Users/esherrar/Documents/larval_source_management/Data resource/Fillinger_Kenya highland LSM_ADULT MOSQUITO_SPRAY CATCHES_RAW DATA.csv",header=TRUE),
                site_for_lsm = 5,
                site_base_net_use = 0.087,
@@ -360,7 +360,7 @@ axis(4,las=2,at=seq(0,100,20))
 mtext(side = 4, line = 2.5,"Adult mosquito density (count per month)")
 
 plotting_fun_f(sites1 = sites4,
-               print_main_site_and_trt = "Site 4 Larviciding",
+               print_main_site_and_trt = "Wamondo: LSM",
                dat = read.csv("C:/Users/esherrar/Documents/larval_source_management/Data resource/Fillinger_Kenya highland LSM_ADULT MOSQUITO_SPRAY CATCHES_RAW DATA.csv",header=TRUE),
                site_for_lsm = 4,
                site_base_net_use = 0.121,
@@ -371,7 +371,7 @@ axis(4,las=2,at=seq(0,100,20))
 
 
 plotting_fun_f(sites1 = sites6,
-               print_main_site_and_trt = "Site 6 No Larviciding",
+               print_main_site_and_trt = "Wakikuyu: No Larviciding",
                dat = read.csv("C:/Users/esherrar/Documents/larval_source_management/Data resource/Fillinger_Kenya highland LSM_ADULT MOSQUITO_SPRAY CATCHES_RAW DATA.csv",header=TRUE),
                site_for_lsm = 6,
                site_base_net_use = 0.051,
