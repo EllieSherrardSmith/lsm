@@ -129,10 +129,12 @@ starting_EIR <- 50  ## This will change to hit estimated prevalence in U5 yrs of
 lsm_LOOP_f = function(parms_row,village,nets_use,root_eir){
   ## LSM modelling 
   
+  ## LSM modelling 
+  
   year <- 365
   month <- 30
   sim_length <- 10 * year
-  human_population <- 30000
+  human_population <- 10000
   starting_EIR <- root_eir  ## This will change to hit estimated prevalence in U5 yrs of (5%, 10%, 20%, 30%, 40%, 50%, and 60%)
   
   simparams <- get_parameters(
@@ -320,27 +322,27 @@ counterf1 = lsm_LOOP_f(parms_row = 1,
 
 counterf2 = lsm_LOOP_f(parms_row = 1,
                        village = 2,
-                       nets_use = nets_use1, 
+                       nets_use = nets_use2, 
                        root_eir = 90.2171)
 
 counterf3 = lsm_LOOP_f(parms_row = 1,
                        village = 3,
-                       nets_use = nets_use1, 
+                       nets_use = nets_use3, 
                        root_eir = 75.2647)
 
 counterf4 = lsm_LOOP_f(parms_row = 1,
                        village = 4,
-                       nets_use = nets_use1, 
+                       nets_use = nets_use4, 
                        root_eir = 10.84384)
 
 counterf5 = lsm_LOOP_f(parms_row = 1,
                        village = 5,
-                       nets_use = nets_use1, 
+                       nets_use = nets_use5, 
                        root_eir = 34.12402)
 
 counterf6 = lsm_LOOP_f(parms_row = 1,
                        village = 6,
-                       nets_use = nets_use1, 
+                       nets_use = nets_use6, 
                        root_eir = 22.7)
 
 write.csv(counterf1,"R/malariasimulation/model outputs/counterf1.csv")
