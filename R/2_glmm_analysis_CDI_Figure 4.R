@@ -16,8 +16,7 @@ tia$site_score = ifelse(tia$Locality == "Kakologo","b",
                         ifelse(tia$Locality == "Nambatiourkaha", "c", "a"))
 
 
-checks1 <- tia %>% group_by(Study.arm,
-                            time_series) %>%
+checks1 <- tia %>% group_by(Study.arm,binary,Locality) %>%
   summarise(Learly = sum(c(L1.Anopheles.spp., L2.Anopheles.spp.)),
             Llate = sum(c(L3.Anopheles.spp., L4.Anopheles.spp.)),
             tot = sum(Total.anopheles),
@@ -37,6 +36,15 @@ plot(checks1$meanlate[checks1$Study.arm == "LLIN"] ~ checks1$time[checks1$Study.
 lines(checks1$meanlate[checks1$Study.arm != "LLIN"] ~ checks1$time[checks1$Study.arm != "LLIN"],
       lwd = 2, col = "darkred")
 
+Tab2Info <- ti2 %>% group_by(Legend,Sampling,Site) %>%
+  summarise(peopleHHsTotal = sum(Sleeper),
+            gam = sum(An..gambiae),
+            nil = sum(An..nili),
+            pha = sum(An..pharoensis),
+            fun = sum(An..funestus),## these data for Fig 2A
+            zei = sum(An..ziemanni),
+            totalAnoph = sum(anoph_any)
+  )
 #############
 ##
 ##
@@ -97,12 +105,12 @@ lines(df2$perPeopleHHsTotalgam[df2$Legend != "LLIN-only arm"] ~
 tia$binary = ifelse(tia$time_series == 3, 0, 1)
 
 modL = data.frame(count_larva = tia$larvalate,
-                 count_bites = tia$Total.anopheles,
-                 arm = tia$arm,
-                 site_score = tia$site_score,
-                 month = tia$time_series,
-                 binary = tia$binary,
-                 sitea = tia$Locality)
+                  count_bites = tia$Total.anopheles,
+                  arm = tia$arm,
+                  site_score = tia$site_score,
+                  month = tia$time_series,
+                  binary = tia$binary,
+                  sitea = tia$Locality)
 
 library("rstanarm")
 library(rstan)
@@ -155,9 +163,9 @@ priors$prior$adjusted_scale
 translate_f = function(pre_or_post,
                        arm_val){
   cnt = (stan1$coefficients[1] + 
-              stan1$coefficients[2] * pre_or_post +
-              stan1$coefficients[3] * arm_val +
-              stan1$coefficients[4] * pre_or_post * arm_val)
+           stan1$coefficients[2] * pre_or_post +
+           stan1$coefficients[3] * arm_val +
+           stan1$coefficients[4] * pre_or_post * arm_val)
   return(as.numeric(cnt))
 }
 B_pre_con = translate_f(pre_or_post = 0,arm_val = 0)
@@ -170,12 +178,12 @@ cc2 = exp((C_post_trt-A_pre_trt)-(D_post_con-B_pre_con))
 100*(1-cc2)
 
 ccc = exp(((stan1$coefficients[1] + 
-  stan1$coefficients[2] * 1 +
-  stan1$coefficients[3] * 1 +
-  stan1$coefficients[4] * 1 * 1) - (stan1$coefficients[1] +
-                                      stan1$coefficients[3] * 1)) -
-  ((stan1$coefficients[1] + 
-      stan1$coefficients[2] * 1) - (stan1$coefficients[1])))
+              stan1$coefficients[2] * 1 +
+              stan1$coefficients[3] * 1 +
+              stan1$coefficients[4] * 1 * 1) - (stan1$coefficients[1] +
+                                                  stan1$coefficients[3] * 1)) -
+            ((stan1$coefficients[1] + 
+                stan1$coefficients[2] * 1) - (stan1$coefficients[1])))
 1-ccc
 ## 100*(1-exp(stan1$coefficients[4]))
 
@@ -189,9 +197,9 @@ translate_uncert_f = function(num_reps){
                          arm_val,
                          which_species,rr){
     cnt = (sims1[rr,1] + 
-                sims1[rr,2] * pre_or_post +
-                sims1[rr,3] * arm_val +
-                sims1[rr,4] * pre_or_post * arm_val )
+             sims1[rr,2] * pre_or_post +
+             sims1[rr,3] * arm_val +
+             sims1[rr,4] * pre_or_post * arm_val )
     
     return(as.numeric(cnt))
   }
@@ -430,7 +438,7 @@ translate_uncert_f = function(num_reps){
     C2_post_trt[j] = translate_f(pre_or_post = 1,vill1 = 0,vill2 = 1, rr=random_draw[j])
   }
   ccc1 = exp((C1_post_trt - A1_pre_trt) -
-              (D_post_con - B_pre_con))
+               (D_post_con - B_pre_con))
   did1 = 100*(1-ccc1)
   ccc2 = exp((C2_post_trt - A2_pre_trt) -
                (D_post_con - B_pre_con))
@@ -582,12 +590,12 @@ for(i in c(1,2,4,5)){
 ti2$binary = ifelse(ti2$time_series == 3, 0, 1)
 
 modL2 = data.frame(count_bites = ti2$anoph_any,
-                  arm = ti2$arm,
-                  month = ti2$time_series,
-                  binary = ti2$binary,
-                  peopeHH = ti2$Sleeper,
-                  sitea = ti2$Site,
-                  site_score = ti2$site_score)
+                   arm = ti2$arm,
+                   month = ti2$time_series,
+                   binary = ti2$binary,
+                   peopeHH = ti2$Sleeper,
+                   sitea = ti2$Site,
+                   site_score = ti2$site_score)
 
 stan1b <- rstanarm::stan_glmer.nb(
   count_bites ~ binary * arm + (1|peopeHH) + (1|sitea), ## species not important so removed
@@ -632,7 +640,7 @@ ccc = exp(((stan1b$coefficients[1] +
               stan1b$coefficients[2] * 1 +
               stan1b$coefficients[3] * 1 +
               stan1b$coefficients[4] * 1 * 1) - (stan1b$coefficients[1] +
-                                                  stan1b$coefficients[3] * 1)) -
+                                                   stan1b$coefficients[3] * 1)) -
             ((stan1b$coefficients[1] + 
                 stan1b$coefficients[2] * 1) - (stan1b$coefficients[1])))
 1-ccc
@@ -686,21 +694,21 @@ axis(2, las = 2, seq(0,100,20))
 axis(1, las = 1, at=c(1,2,3,4), labels = c("No LSM", "LSM","No LSM", "LSM"))
 mtext("Before                                   After", side = 1, line = 2.5)
 points(modL2$count_bites[modL2$arm == 0 & modL2$binary == 0] ~ sample(size = length(modL2$count_bites[modL2$arm == 0 & modL2$binary == 0]),
-                                                                   x = rnorm(n = 20,mean = 1, sd = 0.15),
-                                                                   replace = TRUE),
+                                                                      x = rnorm(n = 20,mean = 1, sd = 0.15),
+                                                                      replace = TRUE),
        pch=19,col = "grey40")
 points(modL2$count_bites[modL2$arm == 1 & modL2$binary == 0] ~ sample(size = length(modL2$count_bites[modL2$arm == 1 & modL2$binary == 0]),
-                                                                   x = rnorm(n = 20,mean = 2, sd = 0.15),
-                                                                   replace = TRUE),
+                                                                      x = rnorm(n = 20,mean = 2, sd = 0.15),
+                                                                      replace = TRUE),
        pch=19,col = "darkgreen")
 
 points(modL2$count_bites[modL2$arm == 0 & modL2$binary == 1] ~ sample(size = length(modL2$count_bites[modL2$arm == 0 & modL2$binary == 1]),
-                                                                   x = rnorm(n = 20,mean = 3, sd = 0.15),
-                                                                   replace = TRUE),
+                                                                      x = rnorm(n = 20,mean = 3, sd = 0.15),
+                                                                      replace = TRUE),
        pch=19,col = "grey40")
 points(modL2$count_bites[modL2$arm == 1 & modL2$binary == 1] ~ sample(size = length(modL2$count_bites[modL2$arm == 1 & modL2$binary == 1]),
-                                                                   x = rnorm(n = 20,mean = 4, sd = 0.15),
-                                                                   replace = TRUE),
+                                                                      x = rnorm(n = 20,mean = 4, sd = 0.15),
+                                                                      replace = TRUE),
        pch=19,col = "darkgreen")
 
 
