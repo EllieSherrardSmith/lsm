@@ -251,7 +251,7 @@ lsm_cotedivoire_f = function(datarow,
 }
 dat_tia$counterf = rep(0, nrow(dat_tia))
 v1 = v2 = v3 = v4 = list()
-v3L = v3L = v3H = v4H = list()
+v3L = v4L = v3H = v4H = list()
 v3_counterf = v4_counterf = list()
 
 for(i in 1:12){
@@ -351,22 +351,22 @@ quantile(uncertainty_absolute_num_mos4[,7:9],c(0.05,0.5,0.95))/10000
 
 ## Create medians and limits files
 ##MEDIANS
-range_estimates_v3countf = array(data=NA, dim=c(nrow(v1[[1]]),12) )
-range_estimates_v4countf = array(data=NA, dim=c(nrow(v1[[1]]),12) )
+range_estimates_v3countf = array(data=NA, dim=c(nrow(v3_counterf[[1]]),12) )
+range_estimates_v4countf = array(data=NA, dim=c(nrow(v4_counterf[[1]]),12) )
 range_estimates_v1 = array(data=NA, dim=c(nrow(v1[[1]]),36) )
 range_estimates_v2 = array(data=NA, dim=c(nrow(v2[[1]]),36) )
 range_estimates_v3 = array(data=NA, dim=c(nrow(v3[[1]]),36) )
 range_estimates_v4 = array(data=NA, dim=c(nrow(v4[[1]]),36) )
 
-range_estINC_v3countf = array(data=NA, dim=c(nrow(v1[[1]]),12) )
-range_estINC_v4countf = array(data=NA, dim=c(nrow(v1[[1]]),12) )
+range_estINC_v3countf = array(data=NA, dim=c(nrow(v3_counterf[[1]]),12) )
+range_estINC_v4countf = array(data=NA, dim=c(nrow(v4_counterf[[1]]),12) )
 range_estINC_v1 = array(data=NA, dim=c(nrow(v1[[1]]),36) )
 range_estINC_v2 = array(data=NA, dim=c(nrow(v2[[1]]),36) )
 range_estINC_v3 = array(data=NA, dim=c(nrow(v3[[1]]),36) )
 range_estINC_v4 = array(data=NA, dim=c(nrow(v4[[1]]),36) )
 
-range_estINCu5_v3countf = array(data=NA, dim=c(nrow(v1[[1]]),12) )
-range_estINCu5_v4countf = array(data=NA, dim=c(nrow(v1[[1]]),12) )
+range_estINCu5_v3countf = array(data=NA, dim=c(nrow(v3_counterf[[1]]),12) )
+range_estINCu5_v4countf = array(data=NA, dim=c(nrow(v4_counterf[[1]]),12) )
 range_estINCu5_v1 = array(data=NA, dim=c(nrow(v1[[1]]),36) )
 range_estINCu5_v2 = array(data=NA, dim=c(nrow(v2[[1]]),36) )
 range_estINCu5_v3 = array(data=NA, dim=c(nrow(v3[[1]]),36) )
@@ -467,6 +467,7 @@ range_u5_inc4[,2] = rowMeans(range_estINCu5_v4)
 cntf3incU5[,2] = rowMeans(range_estINCu5_v3countf)
 cntf4incU5[,2] = rowMeans(range_estINCu5_v4countf)
 
+
 # rangegm_est1 = expand.grid(timestep = ALLv1[[1]]$timestep)
 # rangegm_est2 = expand.grid(timestep = ALLv2[[1]]$timestep)
 # rangegm_est3 = expand.grid(timestep = ALLv3[[1]]$timestep)
@@ -532,6 +533,16 @@ for(i in 1:nrow(range_est1)){
   
 }
 
+write.csv(range_inc1,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage1inc.csv")
+write.csv(range_inc2,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage2inc.csv")
+write.csv(range_inc3,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage3inc.csv")
+write.csv(range_inc4,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage4inc.csv")
+
+write.csv(range_u5_inc1,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage1u5_inc.csv")
+write.csv(range_u5_inc2,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage2u5_inc.csv")
+write.csv(range_u5_inc3,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage3u5_inc.csv")
+write.csv(range_u5_inc4,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage4u5_inc.csv")
+
 write.csv(range_est1,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage1.csv")
 write.csv(range_est2,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage2.csv")
 write.csv(range_est3,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage3.csv")
@@ -541,7 +552,6 @@ write.csv(range_estimates_v1,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer doc
 write.csv(range_estimates_v2,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage2PREV.csv")
 write.csv(range_estimates_v3,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage3PREV.csv")
 write.csv(range_estimates_v4,"C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/COTEDIVOIREvillage4PREV.csv")
-
 #########################################
 ##
 ## Model estimated reductions
@@ -556,9 +566,36 @@ mean(c(cntf4prev[c(6*year + 31+30+1):c(7*year + 31+30+1),2] - range_est4[c(6*yea
 mean(c(cntf3prev[c(6*year + 31+30+1):c(7*year + 31+30+1),2] - range_est3[c(6*year + 31+30+1):c(7*year + 31+30+1),4])/cntf3prev[c(6*year + 31+30+1):c(7*year + 31+30+1),2])
 mean(c(cntf4prev[c(6*year + 31+30+1):c(7*year + 31+30+1),2] - range_est4[c(6*year + 31+30+1):c(7*year + 31+30+1),4])/cntf4prev[c(6*year + 31+30+1):c(7*year + 31+30+1),2])
 
+##########################################
+##
+## Read in the data
+##
+range_est1 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage1.csv", header = TRUE)
+range_est2 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage2.csv", header = TRUE)
+range_est3 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage3.csv", header = TRUE)
+range_est4 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage4.csv", header = TRUE)
+
+range_estimates_v1 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage1PREV.csv", header = TRUE)
+range_estimates_v2 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage2PREV.csv", header = TRUE)
+range_estimates_v3 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage3PREV.csv", header = TRUE)
+range_estimates_v4 = read.csv("C:/Users/esherrar/OneDrive - LSTM/ICL transfer documents/OneDrive_1_22-09-2024/Documents/lsm/CRITICAL R CODE/model outputs/cdi/COTEDIVOIREvillage4PREV.csv", header = TRUE)
+
+range_est1 = range_est1[,2:5] 
+range_est2 = range_est2[,2:5] 
+range_est3 = range_est3[,2:5] 
+range_est4 = range_est4[,2:5] 
+
+range_estimates_v1 = range_estimates_v1[,2:37]
+range_estimates_v2 = range_estimates_v2[,2:37]
+range_estimates_v3 = range_estimates_v3[,2:37]
+range_estimates_v4 = range_estimates_v4[,2:37]
+
+
 ########################################
 ##
 ## Figure 5
+year = 365
+
 par(mfrow= c(2,3))
 par(mar=c(4,4,1,1))
 plot(range_est3[,2] ~ range_est3[,1],
@@ -579,7 +616,12 @@ lines(cntf3prev[,2] ~ cntf3prev[,1],col="grey",lwd=2)
 lines(range_est3[,2] ~ range_est3[,1],col="aquamarine2",lwd=1.5)
 
 ## add prev data
-prev1 = prev_estimates[4]
+## methods to generate these prevalence esimtaes
+## are in main manuscript - spread cases across seasonal trend
+## then selected the matching prevalence estimate for each village
+#Kolékaha and Lofinékaha (control villages), and Kakologo and Nambatiourkaha (treatment villages) respectively 
+prev_estimates = c(0.34, 0.24, 0.42, 0.27)
+prev1 = prev_estimates[3]
 inc1 = 339/758
 inc2 = 106/758
 xx = inc2 * prev1/inc1
@@ -848,7 +890,7 @@ points(c(prev_estimates[2],xx) ~ c(2070,2070+365),
 #######################################################
 ##
 ## Compare the abs versus rel reductions
-par(mar = c(4,5,2,5))
+par(mar = c(5,5,2,5))
 ## F
 vils = c("Musilongo","Musilongo","Kezege","Kezege","Wamondo","Wamondo",
          "Kakologo","Nambatiourkaha")
@@ -870,12 +912,18 @@ rel_upp = c(0.99, 0.99, 0.92, 0.88, 0.82, 0.21,
 cols = c("orange","orange","red","red","darkred","darkred","aquamarine2","purple")
 spes = c(19,17,19,17,19,17,19,19)
 plot(rel_mn ~ abs_mn, col = cols, pch = spes,
-     ylab = "Relative reduction: vector densities (%)",
-     xlab = "Absolute reduction: vectors per person",
+     ylab = "", # Relative reduction: vector densities (%)
+     xlab = "", # Absolute reduction: vectors per person
      ylim = c(min(rel_low),1),
      yaxt = "n",cex = 2,
      xlim = c(min(abs_low),max(abs_upp)))
 axis(2, las = 2, at = c(-0.5,0,0.5,1),labels = c(-50,0,50,100))
+mtext("Model derived relative",side = 2, line = 3,cex = 0.8)
+mtext("reduction in vector densities (%)",side = 2, line = 2.25,cex = 0.8)
+
+mtext("Model derived absolute",side = 1, line = 2.25,cex = 0.8)
+mtext("reduction in vector densities (%)",side = 1, line = 3,cex = 0.8)
+
 for(i in 1:8){
   segments(x0 = abs_upp[i],
            x1 = abs_low[i],
