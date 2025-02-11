@@ -618,7 +618,7 @@ translate2_uncert_f = function(num_reps){
   cc3 = exp((C3_post_trt_fun-A3_pre_trt_fun)-(D_post_con_fun-B_pre_con_fun))
   did_funestusV3 = 100*(1-cc3)
   cc4 = exp((C4_post_trt_fun-A4_pre_trt_fun)-(D_post_con_fun-B_pre_con_fun))
-  did_funestusV1 = 100*(1-cc4)
+  did_funestusV4 = 100*(1-cc4)
   
   ccg1 = exp((C1_post_trt_gam-A1_pre_trt_gam)-(D_post_con_gam-B_pre_con_gam))
   did_gambiaeV1 = 100*(1-ccg1) ## 100*(1-exp(stan4$coefficients[5]+stan4$coefficients[8]))
@@ -688,26 +688,27 @@ mtext(c(        "Pre-intervention   Post-intervention" ),
       side = 1, line = 1,cex = 0.6)
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_fun),
-         y1 = sqrt(D_post_con_fun),
+         y0 = sqrt(median(rrr$B_pre_con_fun)),
+         y1 = sqrt(median(rrr$D_post_con_fun)),
          col="darkred")
-diff_before = sqrt(A1_pre_trt_fun) - sqrt(B_pre_con_fun)
+diff_before = sqrt(median(rrr$A1_pre_trt_fun)) - 
+  sqrt(median(rrr$B_pre_con_fun))
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_fun)+diff_before,
-         y1 = sqrt(D_post_con_fun)+diff_before,
+         y0 = sqrt(median(rrr$B_pre_con_fun))+diff_before,
+         y1 = sqrt(median(rrr$D_post_con_fun))+diff_before,
          lty=1,col="darkblue")
-y2 = (3*sqrt(exp(B_pre_con_fun))+diff_before) /1.5
+y2 = (median(rrr$B_pre_con_fun) - median(rrr$D_post_con_fun))
 segments(x0 = 3,
          x1 = 4.5,
          y0 = sqrt(y2),
-         y1 = sqrt(exp(C1_post_trt_fun)),
+         y1 = sqrt(median(rrr$C1_post_trt_fun)),
          lty=2,col="darkblue")
 
-points(sqrt(c(B_pre_con_fun,
-              A1_pre_trt_fun,
-              D_post_con_fun,
-              C1_post_trt_fun)) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+points(sqrt(c(median(rrr$B_pre_con_fun),
+              median(rrr$A1_pre_trt_fun),
+              median(rrr$D_post_con_fun),
+              median(rrr$C1_post_trt_fun))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
 
 #
 mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,7],0.05)),
@@ -754,26 +755,26 @@ mtext(c(        "Pre-intervention   Post-intervention" ),
       side = 1, line = 1,cex = 0.6)
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_fun),
-         y1 = sqrt(D_post_con_fun),
+         y0 = sqrt(median(rrr$B_pre_con_fun)),
+         y1 = sqrt(median(rrr$D_post_con_fun)),
          col="darkred")
-diff_before = sqrt(A3_pre_trt_fun) - sqrt(B_pre_con_fun)
+diff_before = sqrt(median(rrr$A3_pre_trt_fun)) - sqrt(median(rrr$B_pre_con_fun))
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_fun)+diff_before,
-         y1 = sqrt(D_post_con_fun)+diff_before,
+         y0 = sqrt(median(rrr$B_pre_con_fun))+diff_before,
+         y1 = sqrt(median(rrr$D_post_con_fun))+diff_before,
          lty=1,col="darkblue")
-y2 = (3*sqrt(B_pre_con_fun)+diff_before) /1.5
+y2 = median(rrr$B_pre_con_fun) - (median(rrr$B_pre_con_fun) - median(rrr$D_post_con_fun))/2
 segments(x0 = 3,
          x1 = 4.5,
-         y0 = sqrt(y2)-diff_before,
-         y1 = sqrt(C3_post_trt_fun),
+         y0 = sqrt(y2-diff_before),
+         y1 = sqrt(median(rrr$C3_post_trt_fun)),
          lty=2,col="darkblue")
 
-points(sqrt(c(B_pre_con_fun,
-              A3_pre_trt_fun,
-              D_post_con_fun,
-              C3_post_trt_fun)) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+points(sqrt(c(median(rrr$B_pre_con_fun),
+              median(rrr$A3_pre_trt_fun),
+              median(rrr$D_post_con_fun),
+              median(rrr$C3_post_trt_fun))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
 
 #
 mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,7],0.05)),
@@ -818,26 +819,27 @@ mtext(c(        "Pre-intervention   Post-intervention" ),
       side = 1, line = 1,cex = 0.6)
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_fun),
-         y1 = sqrt(D_post_con_fun),
+         y0 = sqrt(median(rrr$B_pre_con_fun)),
+         y1 = sqrt(median(rrr$D_post_con_fun)),
          col="darkred")
-diff_before = sqrt(A4_pre_trt_fun) - sqrt(B_pre_con_fun)
+diff_before = sqrt(median(rrr$A4_pre_trt_fun)) - sqrt(median(rrr$B_pre_con_fun))
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_fun)+diff_before,
-         y1 = sqrt(D_post_con_fun)+diff_before,
+         y0 = sqrt(median(rrr$B_pre_con_fun))+diff_before,
+         y1 = sqrt(median(rrr$D_post_con_fun))+diff_before,
          lty=1,col="darkblue")
+y2 = median(rrr$B_pre_con_fun) - (median(rrr$B_pre_con_fun) - median(rrr$D_post_con_fun))/2
 
 segments(x0 = 3,
          x1 = 4.5,
          y0 = sqrt(0.6),
-         y1 = sqrt(C4_post_trt_fun),
+         y1 = sqrt(median(rrr$C4_post_trt_fun)),
          lty=2,col="darkblue")
 
-points(sqrt(c(B_pre_con_fun,
-              A4_pre_trt_fun,
-              D_post_con_fun,
-              C4_post_trt_fun)) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+points(sqrt(c(median(rrr$B_pre_con_fun),
+              median(rrr$A4_pre_trt_fun),
+              median(rrr$D_post_con_fun),
+              median(rrr$C4_post_trt_fun))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
 
 #
 mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,7],0.05)),
@@ -880,26 +882,26 @@ mtext(c(        "Pre-intervention   Post-intervention" ),
       side = 1, line = 1,cex = 0.6)
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_gam),
-         y1 = sqrt(D_post_con_gam),
+         y0 = sqrt(median(rrr$B_pre_con_gam)),
+         y1 = sqrt(median(rrr$D_post_con_gam)),
          col="darkred")
-diff_before = sqrt(A1_pre_trt_gam) - sqrt(B_pre_con_gam)
+diff_before = sqrt(median(rrr$A1_pre_trt_gam)) - sqrt(median(rrr$B_pre_con_gam))
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_gam)+diff_before,
-         y1 = sqrt(D_post_con_gam)+diff_before,
+         y0 = sqrt(median(rrr$B_pre_con_gam))+diff_before,
+         y1 = sqrt(median(rrr$D_post_con_gam))+diff_before,
          lty=1,col="darkblue")
-y2 = (3*sqrt(B_pre_con_gam)+diff_before) /1.5
+y2 = (3*sqrt(median(rrr$B_pre_con_gam))+diff_before) /1.5
 segments(x0 = 3,
          x1 = 4.5,
          y0 = sqrt(y2)+diff_before*1.28,
-         y1 = sqrt(C1_post_trt_gam),
+         y1 = sqrt(median(rrr$C1_post_trt_gam)),
          lty=2,col="darkblue")
 
-points(sqrt(c(B_pre_con_gam,
-              A1_pre_trt_gam,
-              D_post_con_gam,
-              C1_post_trt_gam)) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+points(sqrt(c(median(rrr$B_pre_con_gam),
+              median(rrr$A1_pre_trt_gam),
+              median(rrr$D_post_con_gam),
+              median(rrr$C1_post_trt_gam))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
 
 #
 mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,15],0.05)),
@@ -942,26 +944,26 @@ mtext(c(        "Pre-intervention     Post-intervention" ),
       side = 1, line = 1,cex=0.6)
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_gam),
-         y1 = sqrt(D_post_con_gam),
+         y0 = sqrt(median(rrr$B_pre_con_gam)),
+         y1 = sqrt(median(rrr$D_post_con_gam)),
          col="darkred")
-diff_before = sqrt(A3_pre_trt_gam) - sqrt(B_pre_con_gam)
+diff_before = sqrt(median(rrr$A3_pre_trt_gam)) - sqrt(median(rrr$B_pre_con_gam))
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_gam)+diff_before,
-         y1 = sqrt(D_post_con_gam)+diff_before,
+         y0 = sqrt(median(rrr$B_pre_con_gam))+diff_before,
+         y1 = sqrt(median(rrr$D_post_con_gam))+diff_before,
          lty=1,col="darkblue")
-y2 = (3*sqrt(B_pre_con_gam)+diff_before) /1.5
+y2 = (3*sqrt(median(rrr$B_pre_con_gam))+diff_before) /1.5
 segments(x0 = 3,
          x1 = 4.5,
          y0 = sqrt(y2)+diff_before+0.75,
-         y1 = sqrt(C3_post_trt_gam),
+         y1 = sqrt(median(rrr$C3_post_trt_gam)),
          lty=2,col="darkblue")
 
-points(sqrt(c(B_pre_con_gam,
-              A3_pre_trt_gam,
-              D_post_con_gam,
-              C3_post_trt_gam)) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+points(sqrt(c(median(rrr$B_pre_con_gam),
+              median(rrr$A3_pre_trt_gam),
+              median(rrr$D_post_con_gam),
+              median(rrr$C3_post_trt_gam))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
 
 #
 mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,15],0.05)),
@@ -1004,26 +1006,26 @@ mtext(c(        "Pre-intervention   Post-intervention" ),
       side = 1, line = 1,cex = 0.6)
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_gam),
-         y1 = sqrt(D_post_con_gam),
+         y0 = sqrt(median(rrr$B_pre_con_gam)),
+         y1 = sqrt(median(rrr$D_post_con_gam)),
          col="darkred")
-diff_before = sqrt(A4_pre_trt_gam) - sqrt(B_pre_con_gam)
+diff_before = sqrt(median(rrr$A4_pre_trt_gam)) - sqrt(median(rrr$B_pre_con_gam))
 segments(x0 = 1.5,
          x1 = 4.5,
-         y0 = sqrt(B_pre_con_gam)+diff_before,
-         y1 = sqrt(D_post_con_gam)+diff_before,
+         y0 = sqrt(median(rrr$B_pre_con_gam))+diff_before,
+         y1 = sqrt(median(rrr$D_post_con_gam))+diff_before,
          lty=1,col="darkblue")
-y2 = (3*sqrt(B_pre_con_gam)+diff_before) /1.5
+y2 = (3*sqrt(median(rrr$B_pre_con_gam))+diff_before) /1.5
 segments(x0 = 3,
          x1 = 4.5,
          y0 = sqrt(y2)-2,
-         y1 = sqrt(C4_post_trt_gam),
+         y1 = sqrt(median(rrr$C4_post_trt_gam)),
          lty=2,col="darkblue")
 
-points(sqrt(c(B_pre_con_gam,
-              A4_pre_trt_gam,
-              D_post_con_gam,
-              C4_post_trt_gam)) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+points(sqrt(c(median(rrr$B_pre_con_gam),
+              median(rrr$A4_pre_trt_gam),
+              median(rrr$D_post_con_gam),
+              median(rrr$C4_post_trt_gam))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
 
 #
 mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,15],0.05)),
@@ -1045,4 +1047,12 @@ for(i in c(1,2,4,5)){
   
 }
 
+par(xpd=NA,cex = 1.11)
+
+text(x = -14, y = 26.5,"(A)",cex=0.8)
+text(x = -7, y = 26.5,"(B)",cex=0.8)
+text(x = -1, y = 26.5,"(C)",cex=0.8)
+text(x = -14, y = 13,"(D)",cex=0.8)
+text(x = -7, y = 13,"(E)",cex=0.8)
+text(x = -1, y = 13,"(F)",cex=0.8)
 

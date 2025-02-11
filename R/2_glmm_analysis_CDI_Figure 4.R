@@ -16,7 +16,7 @@ tia$site_score = ifelse(tia$Locality == "Kakologo","b",
                         ifelse(tia$Locality == "Nambatiourkaha", "c", "a"))
 
 
-checks1 <- tia %>% group_by(Study.arm,binary,Locality) %>%
+checks1 <- tia %>% group_by(Study.arm,time_series,Locality) %>%
   summarise(Learly = sum(c(L1.Anopheles.spp., L2.Anopheles.spp.)),
             Llate = sum(c(L3.Anopheles.spp., L4.Anopheles.spp.)),
             tot = sum(Total.anopheles),
@@ -105,12 +105,12 @@ lines(df2$perPeopleHHsTotalgam[df2$Legend != "LLIN-only arm"] ~
 tia$binary = ifelse(tia$time_series == 3, 0, 1)
 
 modL = data.frame(count_larva = tia$larvalate,
-                  count_bites = tia$Total.anopheles,
-                  arm = tia$arm,
-                  site_score = tia$site_score,
-                  month = tia$time_series,
-                  binary = tia$binary,
-                  sitea = tia$Locality)
+                 count_bites = tia$Total.anopheles,
+                 arm = tia$arm,
+                 site_score = tia$site_score,
+                 month = tia$time_series,
+                 binary = tia$binary,
+                 sitea = tia$Locality)
 
 library("rstanarm")
 library(rstan)
@@ -163,9 +163,9 @@ priors$prior$adjusted_scale
 translate_f = function(pre_or_post,
                        arm_val){
   cnt = (stan1$coefficients[1] + 
-           stan1$coefficients[2] * pre_or_post +
-           stan1$coefficients[3] * arm_val +
-           stan1$coefficients[4] * pre_or_post * arm_val)
+              stan1$coefficients[2] * pre_or_post +
+              stan1$coefficients[3] * arm_val +
+              stan1$coefficients[4] * pre_or_post * arm_val)
   return(as.numeric(cnt))
 }
 B_pre_con = translate_f(pre_or_post = 0,arm_val = 0)
@@ -178,12 +178,12 @@ cc2 = exp((C_post_trt-A_pre_trt)-(D_post_con-B_pre_con))
 100*(1-cc2)
 
 ccc = exp(((stan1$coefficients[1] + 
-              stan1$coefficients[2] * 1 +
-              stan1$coefficients[3] * 1 +
-              stan1$coefficients[4] * 1 * 1) - (stan1$coefficients[1] +
-                                                  stan1$coefficients[3] * 1)) -
-            ((stan1$coefficients[1] + 
-                stan1$coefficients[2] * 1) - (stan1$coefficients[1])))
+  stan1$coefficients[2] * 1 +
+  stan1$coefficients[3] * 1 +
+  stan1$coefficients[4] * 1 * 1) - (stan1$coefficients[1] +
+                                      stan1$coefficients[3] * 1)) -
+  ((stan1$coefficients[1] + 
+      stan1$coefficients[2] * 1) - (stan1$coefficients[1])))
 1-ccc
 ## 100*(1-exp(stan1$coefficients[4]))
 
@@ -197,9 +197,9 @@ translate_uncert_f = function(num_reps){
                          arm_val,
                          which_species,rr){
     cnt = (sims1[rr,1] + 
-             sims1[rr,2] * pre_or_post +
-             sims1[rr,3] * arm_val +
-             sims1[rr,4] * pre_or_post * arm_val )
+                sims1[rr,2] * pre_or_post +
+                sims1[rr,3] * arm_val +
+                sims1[rr,4] * pre_or_post * arm_val )
     
     return(as.numeric(cnt))
   }
@@ -379,7 +379,7 @@ pp_check(stan2, plotfun = "dens_overlay")
 yy_pp = posterior_predict(stan2)
 n_sims = nrow(yy_pp)
 subset = sample(n_sims, 100)
-ppc_dens_overlay(log10(modL$count_larva+1), log10(yy_pp[subset,]+1))
+# rstanarm::ppc_dens_overlay(log10(modL$count_larva+1), log10(yy_pp[subset,]+1))
 # library(shinystan)
 
 ## equation
@@ -438,7 +438,7 @@ translate_uncert_f = function(num_reps){
     C2_post_trt[j] = translate_f(pre_or_post = 1,vill1 = 0,vill2 = 1, rr=random_draw[j])
   }
   ccc1 = exp((C1_post_trt - A1_pre_trt) -
-               (D_post_con - B_pre_con))
+              (D_post_con - B_pre_con))
   did1 = 100*(1-ccc1)
   ccc2 = exp((C2_post_trt - A2_pre_trt) -
                (D_post_con - B_pre_con))
@@ -456,7 +456,8 @@ translate_uncert_f = function(num_reps){
 rrr = translate_uncert_f(num_reps = 1000)
 quantile(rrr[,1],c(0.05,0.5,0.95))
 quantile(rrr[,2],c(0.05,0.5,0.95))
-par(mfrow = c(2,1))
+par(mfrow = c(1,2))
+par(mar = c(4,4,1,1))
 boxplot(sqrt(modL$count_larva[modL$binary == 0 & modL$arm == 0]),
         sqrt(modL$count_larva[modL$binary == 0 & modL$site_score == "b"]),
         NA,
@@ -517,7 +518,7 @@ for(i in c(1,2,4,5)){
            y1 = maxs_stan4[i],col = col_segs[i],lwd=2)       
   
 }
-legend("right",legend = c("Control","LSM"),
+legend("topright",legend = c("Control","LSM"),
        col = c("red","blue"),pch=15,bty="n")
 
 
@@ -532,7 +533,7 @@ boxplot(sqrt(modL$count_larva[modL$binary == 0 & modL$arm == 0]),
         col = adegenet::transp(c("red","blue",NA,"red","blue"),0.4),
         ylab = "Mosquito counts",xlab = "Treatment")
 
-text(1.1,sqrt(160),"Nambatiourkaha")
+text(1.5,sqrt(160),"Nambatiourkaha")
 axis(2, las = 2, at = sqrt(seq(0,160,20)),labels = seq(0,160,20))
 abline(v=3,lty=1,col="grey34")
 
@@ -581,21 +582,37 @@ for(i in c(1,2,4,5)){
            y1 = maxs_stan4[i],col = col_segs[i],lwd=2)       
   
 }
+par(xpd=NA,cex = 1.11)
 
+text(x = -8, y = 13.5,"(A)",cex=0.8)
+text(x = -0.7, y = 13.5,"(B)",cex=0.8)
 #################################
 ##
 ## And estimate the same for the adult biting
 ##
 ##################################
+ti2 = read.csv("C:/Users/esherrar/Documents/RProjects/lsm/data/Tia2024/Data_Culicidianfauna_Tia_2024.06.19_ellie.csv", header = TRUE)
+
+ti2$date_form = lubridate::dmy(ti2$Date)
+ti2$year = lubridate::year(ti2$date_form)
+ti2$month = lubridate::month(ti2$date_form)
+ti2$time_series = ifelse(ti2$year == "2019",ti2$month,ti2$month+12)
+ti2$arm = ifelse(ti2$Legend == "LLIN-only arm", 0, 1)
+ti2$Site = ifelse(ti2$Site == "Kol\xe9kaha","other",
+                  ti2$Site)
+ti2$site_score = ifelse(ti2$Site == "Kakologo","b",
+                        ifelse(ti2$Site == "Nambatiourkaha", "c", "a"))
+ti2$gam = ti2$An..gambiae
+
 ti2$binary = ifelse(ti2$time_series == 3, 0, 1)
 
 modL2 = data.frame(count_bites = ti2$anoph_any,
-                   arm = ti2$arm,
-                   month = ti2$time_series,
-                   binary = ti2$binary,
-                   peopeHH = ti2$Sleeper,
-                   sitea = ti2$Site,
-                   site_score = ti2$site_score)
+                  arm = ti2$arm,
+                  month = ti2$time_series,
+                  binary = ti2$binary,
+                  peopeHH = ti2$Sleeper,
+                  sitea = ti2$Site,
+                  site_score = ti2$site_score)
 
 stan1b <- rstanarm::stan_glmer.nb(
   count_bites ~ binary * arm + (1|peopeHH) + (1|sitea), ## species not important so removed
@@ -640,7 +657,7 @@ ccc = exp(((stan1b$coefficients[1] +
               stan1b$coefficients[2] * 1 +
               stan1b$coefficients[3] * 1 +
               stan1b$coefficients[4] * 1 * 1) - (stan1b$coefficients[1] +
-                                                   stan1b$coefficients[3] * 1)) -
+                                                  stan1b$coefficients[3] * 1)) -
             ((stan1b$coefficients[1] + 
                 stan1b$coefficients[2] * 1) - (stan1b$coefficients[1])))
 1-ccc
@@ -694,21 +711,21 @@ axis(2, las = 2, seq(0,100,20))
 axis(1, las = 1, at=c(1,2,3,4), labels = c("No LSM", "LSM","No LSM", "LSM"))
 mtext("Before                                   After", side = 1, line = 2.5)
 points(modL2$count_bites[modL2$arm == 0 & modL2$binary == 0] ~ sample(size = length(modL2$count_bites[modL2$arm == 0 & modL2$binary == 0]),
-                                                                      x = rnorm(n = 20,mean = 1, sd = 0.15),
-                                                                      replace = TRUE),
+                                                                   x = rnorm(n = 20,mean = 1, sd = 0.15),
+                                                                   replace = TRUE),
        pch=19,col = "grey40")
 points(modL2$count_bites[modL2$arm == 1 & modL2$binary == 0] ~ sample(size = length(modL2$count_bites[modL2$arm == 1 & modL2$binary == 0]),
-                                                                      x = rnorm(n = 20,mean = 2, sd = 0.15),
-                                                                      replace = TRUE),
+                                                                   x = rnorm(n = 20,mean = 2, sd = 0.15),
+                                                                   replace = TRUE),
        pch=19,col = "darkgreen")
 
 points(modL2$count_bites[modL2$arm == 0 & modL2$binary == 1] ~ sample(size = length(modL2$count_bites[modL2$arm == 0 & modL2$binary == 1]),
-                                                                      x = rnorm(n = 20,mean = 3, sd = 0.15),
-                                                                      replace = TRUE),
+                                                                   x = rnorm(n = 20,mean = 3, sd = 0.15),
+                                                                   replace = TRUE),
        pch=19,col = "grey40")
 points(modL2$count_bites[modL2$arm == 1 & modL2$binary == 1] ~ sample(size = length(modL2$count_bites[modL2$arm == 1 & modL2$binary == 1]),
-                                                                      x = rnorm(n = 20,mean = 4, sd = 0.15),
-                                                                      replace = TRUE),
+                                                                   x = rnorm(n = 20,mean = 4, sd = 0.15),
+                                                                   replace = TRUE),
        pch=19,col = "darkgreen")
 
 
@@ -763,7 +780,7 @@ pp_check(stan2b, plotfun = "dens_overlay")
 yy_pp = posterior_predict(stan2b)
 n_sims = nrow(yy_pp)
 subset = sample(n_sims, 100)
-ppc_dens_overlay(log10(modL2$count_bites+1), log10(yy_pp[subset,]+1))
+# ppc_dens_overlay(log10(modL2$count_bites+1), log10(yy_pp[subset,]+1))
 # library(shinystan)
 
 ## equation
@@ -842,6 +859,136 @@ quantile(rrr[,1],c(0.05,0.5,0.95))
 quantile(rrr[,2],c(0.05,0.5,0.95))
 
 
+par(mfrow = c(1,2))
+par(mar = c(4,4,1,1))
+boxplot(sqrt(modL2$count_bites[modL2$binary == 0 & modL2$arm == 0]),
+        sqrt(modL2$count_bites[modL2$binary == 0 & modL2$site_score == "b"]),
+        NA,
+        sqrt(modL2$count_bites[modL2$binary == 1 & modL2$arm == 0]),
+        sqrt(modL2$count_bites[modL2$binary == 1 & modL2$site_score == "b"]), 
+        yaxt = "n",border = "grey",
+        
+        ylim = sqrt(c(0,160)),
+        col = adegenet::transp(c("red","blue",NA,"red","blue"),0.4),
+        ylab = "Mosquito counts",xlab = "Treatment")
+
+text(1,sqrt(160),"Kakologo")
+axis(2, las = 2, at = sqrt(seq(0,160,20)),labels = seq(0,160,20))
+abline(v=3,lty=1,col="grey34")
+
+mtext("Pre-intervention      Post-intervention",
+      cex = 0.8,
+      side = 1, line = 1)
+segments(x0 = 1.5,
+         x1 = 4.5,
+         y0 = sqrt(as.numeric(quantile(rrr[,3],0.5))),
+         y1 = sqrt(as.numeric(quantile(rrr[,6],0.5))),
+         col="darkred")
+diff_before = sqrt(as.numeric(quantile(rrr[,3],0.5))) - sqrt(as.numeric(quantile(rrr[,4],0.5)))
+segments(x0 = 1.5,
+         x1 = 4.5,
+         y0 = sqrt(as.numeric(quantile(rrr[,3],0.5)))+diff_before,
+         y1 = sqrt(as.numeric(quantile(rrr[,6],0.5)))+diff_before,
+         lty=1,col="darkblue")
+y2 = (3*sqrt(as.numeric(quantile(rrr[,3],0.5)))+diff_before) 
+segments(x0 = 3,
+         x1 = 4.5,
+         y0 = 2.9,
+         y1 = sqrt(as.numeric(quantile(rrr[,7],0.5))),
+         lty=2,col="darkblue")
+
+points(sqrt(c(as.numeric(quantile(rrr[,3],0.5)),
+              as.numeric(quantile(rrr[,4],0.5)),
+              as.numeric(quantile(rrr[,6],0.5)),
+              as.numeric(quantile(rrr[,7],0.5)))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+
+#
+mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,3],0.05)),
+                    as.numeric(quantile(rrr[,4],0.05)),
+                    NA,
+                    as.numeric(quantile(rrr[,6],0.05)),
+                    as.numeric(quantile(rrr[,7],0.05))) )#
+maxs_stan4 = sqrt(c(as.numeric(quantile(rrr[,3],0.95)),
+                    as.numeric(quantile(rrr[,4],0.95)),
+                    NA,
+                    as.numeric(quantile(rrr[,6],0.95)),
+                    as.numeric(quantile(rrr[,7],0.95))) )
+col_segs = c("red","blue",NA,"red","blue")
+for(i in c(1,2,4,5)){
+  segments(x0 = i,
+           x1 = i,
+           y0 = mins_stan4[i],
+           y1 = maxs_stan4[i],col = col_segs[i],lwd=2)       
+  
+}
+legend("topright",legend = c("Control","LSM"),
+       col = c("red","blue"),pch=15,bty="n")
+
+
+boxplot(sqrt(modL2$count_bites[modL2$binary == 0 & modL2$arm == 0]),
+        sqrt(modL2$count_bites[modL2$binary == 0 & modL2$site_score == "c"]),
+        NA,
+        sqrt(modL2$count_bites[modL2$binary == 1 & modL2$arm == 0]),
+        sqrt(modL2$count_bites[modL2$binary == 1 & modL2$site_score == "c"]), 
+        yaxt = "n",border = "grey",
+        
+        ylim = sqrt(c(0,160)),
+        col = adegenet::transp(c("red","blue",NA,"red","blue"),0.4),
+        ylab = "Mosquito counts",xlab = "Treatment")
+
+text(1.5,sqrt(160),"Nambatiourkaha")
+axis(2, las = 2, at = sqrt(seq(0,160,20)),labels = seq(0,160,20))
+abline(v=3,lty=1,col="grey34")
+
+mtext("Pre-intervention      Post-intervention",
+      cex = 0.8,
+      side = 1, line = 1)
+segments(x0 = 1.5,
+         x1 = 4.5,
+         y0 = sqrt(as.numeric(quantile(rrr[,3],0.5))),
+         y1 = sqrt(as.numeric(quantile(rrr[,6],0.5))),
+         col="darkred")
+diff_before = sqrt(as.numeric(quantile(rrr[,5],0.5))) - sqrt(as.numeric(quantile(rrr[,3],0.5)))
+segments(x0 = 1.5,
+         x1 = 4.5,
+         y0 = sqrt(as.numeric(quantile(rrr[,3],0.5)))+diff_before,
+         y1 = sqrt(as.numeric(quantile(rrr[,6],0.5)))+diff_before,
+         lty=1,col="darkblue")
+y2 = (3*sqrt(as.numeric(quantile(rrr[,3],0.5)))+diff_before) 
+segments(x0 = 3,
+         x1 = 4.5,
+         y0 = 2.6,
+         y1 = sqrt(as.numeric(quantile(rrr[,8],0.5))),
+         lty=2,col="darkblue")
+
+points(sqrt(c(as.numeric(quantile(rrr[,3],0.5)),
+              as.numeric(quantile(rrr[,5],0.5)),
+              as.numeric(quantile(rrr[,6],0.5)),
+              as.numeric(quantile(rrr[,8],0.5)))) ~ c(1,2,4,5),col = c("red","blue","red","blue"),pch=19) 
+
+#
+mins_stan4 = sqrt(c(as.numeric(quantile(rrr[,3],0.05)),
+                    as.numeric(quantile(rrr[,5],0.05)),
+                    NA,
+                    as.numeric(quantile(rrr[,6],0.05)),
+                    as.numeric(quantile(rrr[,8],0.05))) )#
+maxs_stan4 = sqrt(c(as.numeric(quantile(rrr[,3],0.95)),
+                    as.numeric(quantile(rrr[,5],0.95)),
+                    NA,
+                    as.numeric(quantile(rrr[,6],0.95)),
+                    as.numeric(quantile(rrr[,8],0.95))) )
+col_segs = c("red","blue",NA,"red","blue")
+for(i in c(1,2,4,5)){
+  segments(x0 = i,
+           x1 = i,
+           y0 = mins_stan4[i],
+           y1 = maxs_stan4[i],col = col_segs[i],lwd=2)       
+  
+}
+par(xpd=NA,cex = 1.11)
+
+text(x = -8, y = 13.5,"(A)",cex=0.8)
+text(x = -0.7, y = 13.5,"(B)",cex=0.8)
 
 ###
 ###
